@@ -1,6 +1,7 @@
 #ifndef _VIRTUALMACHINE_H_
 #define _VIRTUALMACHINE_H_
 
+#include <list>
 
 class VirtualMachine
 {
@@ -12,9 +13,8 @@ public:
     // Access methods
     bool getStatus() const;
 	
-protected:
-
 private:
+
     size_t mCommandCounter;
     bool mStatus;
 };
