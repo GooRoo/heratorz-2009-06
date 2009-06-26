@@ -10,8 +10,8 @@ union command {
 
 	struct {
 		unsigned int r1 : 14;			
-		unsigned int imm : 6;
-		unsigned int cmp_type : 4;
+		unsigned int imm : 7;
+		unsigned int cmp_type : 3;
 		unsigned int op : 4;
 		unsigned int flag : 4;
 	} s_command;
