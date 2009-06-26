@@ -3,17 +3,17 @@
 
 union command {
 	struct {
-		unsigned r2 : 14;
-		unsigned r1 : 14;
-		unsigned op : 4;
+		unsigned int r2 : 14;
+		unsigned int r1 : 14;
+		unsigned int op : 4;
 	} d_command;
 
 	struct {
-		unsigned r1 : 14;			
-		unsigned imm : 6;
-		unsigned cmp_type : 4;
-		unsigned op : 4;
-		unsigned flag : 4;
+		unsigned int r1 : 14;			
+		unsigned int imm : 6;
+		unsigned int cmp_type : 4;
+		unsigned int op : 4;
+		unsigned int flag : 4;
 	} s_command;
 
 };
