@@ -47,6 +47,7 @@ public:
 
     command getCommand(int address) const;
 	
+	int getSize() const {return m_size; };
 protected:
 
 private:
