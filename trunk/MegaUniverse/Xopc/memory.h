@@ -39,6 +39,8 @@ public:
 	Memory(int size);
 	~Memory();
 
+	void loadFile(char* filename);
+
     // Access methods
 	double getData(int address) const;
 	bool setData(int address, double data);
