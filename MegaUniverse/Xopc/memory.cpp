@@ -1,4 +1,5 @@
 #include "memory.h"
+#include <iosfwd>
 
 Memory::Memory(int size)
 {
@@ -48,4 +49,18 @@ command Memory::getCommand(int address) const
 	}
 	throw 0;
 
+}
+
+
+void Memory::loadFile(char* filename)
+{
+	FILE *f = fopen( filename, "r" );
+	if(f)
+	{
+		while(!feof(f))
+		{
+				fread(&m_mem, sizeof(frame), m_size, f);
+		}
+		fclose( f );
+	}
 }
