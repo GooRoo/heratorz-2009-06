@@ -1,23 +1,7 @@
 #include <iostream>
+#include "memory.h"
+
 using namespace std;
-
-union command{
-		struct {
-			unsigned r2 : 14;
-			unsigned r1 : 14;
-			unsigned op : 4;
-		} d_command;
-
-		struct {
-			unsigned r1 : 14;			
-			unsigned imm : 6;
-			unsigned cmp_type : 4;
-			unsigned op : 4;
-			unsigned flag : 4;
-		} s_command;
-
-	};
-
 void decoder(command com)
 {
 	if(com.s_command.flag)
@@ -49,11 +33,11 @@ void decoder(command com)
 		switch(com.s_command.op)
 		{
 		case 0:
-			//cout<<"noop"<<endl;
+		//	cout<<"noop"<<endl;
 			break;
 		case 1:
-				cout<<"compare "<<com.s_command.r1;
-	
+			cout<<"compare "<<com.s_command.r1;
+
 			switch(com.s_command.cmp_type)
 			{
 			case 0:
@@ -73,7 +57,7 @@ void decoder(command com)
 				break;
 			}
 
-				cout<<" 0"<<endl;
+			cout<<" 0"<<endl;
 			break;
 		case 2:
 			cout<<"sqrt "<<com.s_command.r1<<endl;
@@ -91,36 +75,12 @@ void decoder(command com)
 
 void main ()
 {
-	char* filename = "bin3.obf";
+	char* filename = "bin1.obf";
+	Memory mem(300);
 
-	
-	command com;
+	mem.loadFile(filename);
 
-	double data;
+	for(int i=0; i< 300; i++)
+		decoder(mem.getCommand(i));
 
-	FILE *f = fopen( filename, "r" );
-	int frame_cnt = 0;
-
-	if(f)
-	{
-		while(!feof(f))
-		{
-			if(frame_cnt % 2)
-			{
-				fread(&com, sizeof(com), 1, f);
-				fread(&data, sizeof(data), 1, f);
-			}
-			else
-			{
-				fread(&data, sizeof(data), 1, f);
-				fread(&com, sizeof(com), 1, f);
-			}
-			
-			decoder(com);
-
-			frame_cnt++;
-
-		}
-		fclose( f );
-	}
 }
