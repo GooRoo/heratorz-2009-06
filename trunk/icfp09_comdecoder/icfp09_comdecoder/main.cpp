@@ -10,7 +10,8 @@ union command{
 
 		struct {
 			unsigned r1 : 14;			
-			unsigned imm : 10;
+			unsigned imm : 6;
+			unsigned cmp_type : 4;
 			unsigned op : 4;
 			unsigned flag : 4;
 		} s_command;
@@ -51,7 +52,28 @@ void decoder(command com)
 			//cout<<"noop"<<endl;
 			break;
 		case 1:
-			cout<<"cmpz "<<com.s_command.imm<<" "<<com.s_command.r1<<endl;
+				cout<<"compare "<<com.s_command.r1;
+	
+			switch(com.s_command.cmp_type)
+			{
+			case 0:
+				cout<<" <";
+				break;
+			case 1:
+				cout<<" <=";
+				break;
+			case 2:
+				cout<<" =";
+				break;
+			case 3:
+				cout<<" >=";
+				break;
+			case 4:
+				cout<<" >";
+				break;
+			}
+
+				cout<<" 0"<<endl;
 			break;
 		case 2:
 			cout<<"sqrt "<<com.s_command.r1<<endl;
@@ -69,7 +91,7 @@ void decoder(command com)
 
 void main ()
 {
-	char* filename = "bin1.obf";
+	char* filename = "bin3.obf";
 
 	
 	command com;
