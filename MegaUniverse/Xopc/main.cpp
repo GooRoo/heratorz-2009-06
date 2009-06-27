@@ -1,15 +1,17 @@
 #include <cstdlib>
 #include "virtualmachine.h"
-
-void parseCmd(int _argc, char * _argv[]);
+#include "orbit_controller.h"
 
 int main(int _argc, char * _argv[])
 {
+	VirtualMachine vm;
+	vm.loadBinary("bin1.obf");
 
-    return EXIT_SUCCESS;
+	OrbitController controller;
+	vm.connect(&controller);
+
+	vm.run();
+
+    return 0;
 }
 
-void parseCmd(int _argc, char * _argv[])
-{
-
-}

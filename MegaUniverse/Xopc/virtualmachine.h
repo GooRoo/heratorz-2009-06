@@ -9,6 +9,7 @@ typedef std::vector<double> PortsList;
 
 class AbstractController;
 
+
 class VirtualMachine
 {
 public:
@@ -84,8 +85,10 @@ private:
     PortsList * mInput;
     PortsList * mOutput;
     unsigned short mCommandCounter;
+	size_t mBinaryEdge;
+	unsigned int mTickCounter;
     bool mStatus;
-
+	static const size_t PORT_MEMORY_SIZE = 16384;
 };
 
 

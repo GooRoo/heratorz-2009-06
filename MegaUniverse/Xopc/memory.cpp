@@ -54,20 +54,25 @@ command Memory::getCommand(addr address) const
 }
 
 
-void Memory::loadFile(const std::string _filename)
+size_t Memory::loadFile(const std::string _filename)
 {
     FILE *f = fopen(_filename.c_str(), "rb");
+	frame * p =m_mem;
+	memset(m_mem, 0, MEMORY_SIZE*sizeof(frame));
+
 	if(f != NULL)
 	{
 		while(!feof(f))
 		{
-				fread(m_mem, sizeof(frame), MEMORY_SIZE, f);
+				p+=fread(p, sizeof(frame), 1, f);
+				
 		}
 		fclose( f );
+		return (p - m_mem);
 	}
     else
     {
         std::cerr << "Unable to open file `" << _filename << "\'." << std::endl;
-        return;
+        return 0;
     }
 }

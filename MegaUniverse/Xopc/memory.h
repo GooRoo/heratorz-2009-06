@@ -42,12 +42,12 @@ public:
 	Memory();
 	~Memory();
 
-    void loadFile(const std::string filename);
+    size_t loadFile(const std::string filename);
 
     // Access methods
 	double getData(addr address) const;
 	bool setData(addr address, double data);
-
+	size_t getSize() {return MEMORY_SIZE;}
     command getCommand(addr address) const;
 	
 private:

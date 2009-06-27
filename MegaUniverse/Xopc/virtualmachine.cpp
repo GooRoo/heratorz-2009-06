@@ -10,31 +10,35 @@
 VirtualMachine::VirtualMachine()
     : mStatus(false),
       mCommandCounter(0),
-      mMemory(NULL),
+	  mBinaryEdge(0),
+	  mTickCounter(0),
       mOutput(NULL),
       mController(NULL)
 {
-    mInput = new PortsList(3);
+
+    mInput = new PortsList(PORT_MEMORY_SIZE);
+	mMemory = new Memory();
+	mOutput = new PortsList(PORT_MEMORY_SIZE);
 }
 
 
 VirtualMachine::~VirtualMachine()
 {
-    delete [] mMemory;
-    delete [] mInput;
-    delete [] mOutput;
+    delete mMemory;
+    delete mInput;
+    delete mOutput;
 }
 
 
 double VirtualMachine::readPort(size_t _num) const
 {
-    return mInput->at(_num);
+    return mOutput->at(_num);
 }
 
 
 void VirtualMachine::writePort(size_t _num, double _val)
 {
-    mOutput->at(_num) = _val;
+    mInput->at(_num) = _val;
 }
 
 
@@ -46,43 +50,47 @@ bool VirtualMachine::getStatus() const
 
 void VirtualMachine::loadBinary(const std::string _filename)
 {
-    mMemory->loadFile(_filename);
+    mBinaryEdge = mMemory->loadFile(_filename);
 }
 
 
 void VirtualMachine::connect(AbstractController *_controller)
 {
     mController = _controller;
-
-    if (mController != NULL)
-    {
-        delete [] mOutput;
-        mOutput = NULL;
-    }
-
-    mOutput = new PortsList(mController->getNumberOfSensorSlots());
+	mController->setVirtualMachine(this);
 }
 
 
 void VirtualMachine::run()
 {
-    if (mMemory == NULL || mController == NULL)
+	if (mMemory == NULL || mController == NULL)
         return;
 
     do 
     {
-        checkInputPorts();
-        executeCommand(mCommandCounter);
-        mCommandCounter++;
-        updateSensors();
-    } while (mCommandCounter < 3000000);
-}
+		checkInputPorts();
 
+		do 
+		{
+			executeCommand(mCommandCounter);
+			mCommandCounter++;
+		} while (mCommandCounter < mBinaryEdge);
+
+		updateSensors();
+		
+		mCommandCounter = 0;
+		mTickCounter++;
+
+    } while (mTickCounter < 20);
+	mTickCounter = 0;
+
+}
 
 void VirtualMachine::checkInputPorts()
 {
     // wait until controller writes into ports
-    mController->OnActuatorsWork();
+	if(mController)
+		mController->OnActuatorsWork();
 
     // ...
     // check if some updates were done and update the model
@@ -97,7 +105,8 @@ void VirtualMachine::updateSensors()
     // ...
 
     // notify controller about it
-    mController->OnSensorsWork();
+	if(mController)
+		mController->OnSensorsWork();
 }
 
 void VirtualMachine::executeCommand(addr _address)
@@ -119,7 +128,7 @@ void VirtualMachine::executeCommand(addr _address)
             case CMPZ:
                 debugStr += "Cmpz ";
                 //debugStr += r;    // @todo преобразовать число в строку
-                switch (comm.s_command.imm)
+				switch (comm.s_command.cmp_type)
                 {
                     case LTZ:
                         debugStr += " < 0";
@@ -144,7 +153,7 @@ void VirtualMachine::executeCommand(addr _address)
                     default:
                         std::cerr << "Binary file is corrupted or we have crooked hands" << std::endl;
                 }
-                onCmpz(static_cast<VirtualMachine::ImmMode>(comm.s_command.imm), r);
+                onCmpz(static_cast<VirtualMachine::ImmMode>(comm.s_command.cmp_type), r);
                 break;
 
             case SQRT:
@@ -251,7 +260,15 @@ void VirtualMachine::onDiv(addr _r1, addr _r2)
 
 void VirtualMachine::onOutput(addr _r1, addr _r2)
 {
-    mOutput->at(_r1) = mMemory->getData(_r2);
+	if(( _r1 >= 0 ) && ( _r1 < PORT_MEMORY_SIZE ) && ( _r2 >= 0 ) && ( _r2 < mMemory->getSize() ))
+	{
+       	if(mOutput)
+			mOutput->at(_r1) = mMemory->getData(_r2);
+	}
+	else
+            throw std::invalid_argument("Invalid input port address");
+
+
 }
 
 
@@ -266,12 +283,27 @@ void VirtualMachine::onPhi(addr _r1, addr _r2)
 
 void VirtualMachine::onCmpz(ImmMode _mode, addr _r)
 {
-    mStatus = (_mode == LTZ) ? (_r < 0)
-        : (_mode == LEZ) ? (_r <= 0)
-        : (_mode == EQZ) ? (_r == 0)
-        : (_mode == GEZ) ? (_r >= 0)
-        : (_mode == GTZ) ? (_r > 0)
-        : false, throw std::invalid_argument("Invalid immediate mode argument");
+	switch(_mode)
+	{
+	case LTZ:
+		mStatus = (mMemory->getData(_r) < 0);
+		break;
+	case LEZ:
+		mStatus = (mMemory->getData(_r) <= 0);
+		break;
+	case EQZ:
+		mStatus = (mMemory->getData(_r) == 0);
+		break;
+	case GEZ:
+		mStatus = (mMemory->getData(_r) >= 0);
+		break;
+	case GTZ:
+		mStatus = (mMemory->getData(_r) > 0);
+		break;
+	default:
+		mStatus = false;
+		throw std::invalid_argument("Invalid immediate mode argument");
+	}
 }
 
 void VirtualMachine::onSqrt(addr _r)
@@ -289,23 +321,11 @@ void VirtualMachine::onCopy(addr _r)
 
 void VirtualMachine::onInput(addr _r)
 {
-    switch (_r)
-    {
-        case 0x2:
-            mMemory->setData(mCommandCounter, (*mInput)[0]);
-            break;
-
-        case 0x3:
-            mMemory->setData(mCommandCounter, (*mInput)[1]);
-            break;
-
-        case 0x3e80:
-            mMemory->setData(mCommandCounter, (*mInput)[2]);
-            break;
-
-        default:
+	if( ( _r >= 0 ) && ( _r < PORT_MEMORY_SIZE ) )
+            mMemory->setData(mCommandCounter, (*mInput)[_r]);
+	else
             throw std::invalid_argument("Invalid input port address");
-    }
+
 }
 
 void VirtualMachine::onNoop()
