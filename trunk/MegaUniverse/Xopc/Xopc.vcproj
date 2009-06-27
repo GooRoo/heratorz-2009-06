@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="8,00"
 	Name="Xopc"
-	ProjectGUID="{092C47F8-E495-4B41-B9A9-8F7690F88C5D}"
+	ProjectGUID="{7C88977F-480F-4996-98AD-9004E1085639}"
 	RootNamespace="Xopc"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform
@@ -48,6 +47,7 @@
 				StructMemberAlignment="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -85,6 +85,9 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -113,13 +116,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -159,6 +160,9 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -167,7 +171,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Файлы исходного кода"
+			Name="Source Files"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
@@ -184,6 +188,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\orbit_controller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\orbit_gui.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\tracer.cpp"
 				>
 			</File>
@@ -193,10 +205,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Заголовочные файлы"
+			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\abstract_gui.h"
+				>
+			</File>
 			<File
 				RelativePath=".\controller.h"
 				>
@@ -210,6 +226,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\orbit_controller.h"
+				>
+			</File>
+			<File
+				RelativePath=".\orbit_gui.h"
+				>
+			</File>
+			<File
 				RelativePath=".\tracer.h"
 				>
 			</File>
@@ -219,7 +243,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Файлы ресурсов"
+			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>

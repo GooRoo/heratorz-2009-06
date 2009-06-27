@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Xopc", "Xopc\Xopc.vcproj", "{092C47F8-E495-4B41-B9A9-8F7690F88C5D}"
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Xopc", "Xopc\Xopc.vcproj", "{7C88977F-480F-4996-98AD-9004E1085639}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{092C47F8-E495-4B41-B9A9-8F7690F88C5D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{092C47F8-E495-4B41-B9A9-8F7690F88C5D}.Debug|Win32.Build.0 = Debug|Win32
-		{092C47F8-E495-4B41-B9A9-8F7690F88C5D}.Release|Win32.ActiveCfg = Release|Win32
-		{092C47F8-E495-4B41-B9A9-8F7690F88C5D}.Release|Win32.Build.0 = Release|Win32
+		{7C88977F-480F-4996-98AD-9004E1085639}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7C88977F-480F-4996-98AD-9004E1085639}.Debug|Win32.Build.0 = Debug|Win32
+		{7C88977F-480F-4996-98AD-9004E1085639}.Release|Win32.ActiveCfg = Release|Win32
+		{7C88977F-480F-4996-98AD-9004E1085639}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
