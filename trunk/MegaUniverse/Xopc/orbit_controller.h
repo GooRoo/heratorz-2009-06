@@ -1,7 +1,7 @@
 #ifndef _ORBIT_CONTROLLER_H_
 #define _ORBIT_CONTROLLER_H_
 #include "controller.h"
-//#include "orbit_gui.h"
+#include "orbit_gui.h"
 
 class OrbitController
 	: public AbstractController
@@ -13,7 +13,7 @@ public:
     virtual void OnSensorsWork();
 
 private:
-	//OrbitGui m_gui;
+	OrbitGui m_gui;
 
 };
 
