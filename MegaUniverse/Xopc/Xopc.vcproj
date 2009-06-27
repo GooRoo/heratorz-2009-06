@@ -45,6 +45,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				StructMemberAlignment="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -175,6 +176,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\memory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\model.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\tracer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\virtualmachine.cpp"
 				>
 			</File>
@@ -184,6 +197,22 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\controller.h"
+				>
+			</File>
+			<File
+				RelativePath=".\memory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\model.h"
+				>
+			</File>
+			<File
+				RelativePath=".\tracer.h"
+				>
+			</File>
 			<File
 				RelativePath=".\virtualmachine.h"
 				>

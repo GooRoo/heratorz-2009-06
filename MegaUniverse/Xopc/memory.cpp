@@ -1,20 +1,21 @@
 #include "memory.h"
-#include <iosfwd>
+#include <cstdio>
+#include <iostream>
+#include <stdexcept>
 
-Memory::Memory(int size)
+Memory::Memory()
 {
-	m_size = size;
-
-	m_mem = new frame[size];
+	m_mem = new frame[MEMORY_SIZE];
 }
+
 Memory::~Memory()
 {
 	delete[] m_mem;
 }
 
-double Memory::getData(int address) const
+double Memory::getData(addr address) const
 {
-	if( ( address >= 0 ) && ( address < m_size ) )
+	if( ( address >= 0 ) && ( address < MEMORY_SIZE ) )
 	{
 		if(address % 2)
 			return m_mem[address].odd_frame.data;
@@ -22,12 +23,12 @@ double Memory::getData(int address) const
 			return m_mem[address].even_frame.data;
 
 	}
-	throw 0;
+    throw std::out_of_range("Wrong data-read address");
 }
 
-bool Memory::setData(int address, double data)
+bool Memory::setData(addr address, double data)
 {
-	if( ( address >= 0 ) && ( address < m_size ) )
+	if( ( address >= 0 ) && ( address < MEMORY_SIZE ) )
 	{
 		if(address % 2)
 			m_mem[address].odd_frame.data = data;
@@ -39,9 +40,9 @@ bool Memory::setData(int address, double data)
 	return false;
 }
 
-command Memory::getCommand(int address) const
+command Memory::getCommand(addr address) const
 {
-	if( ( address >= 0 ) && ( address < m_size ) )
+	if( ( address >= 0 ) && ( address < MEMORY_SIZE ) )
 	{
 		if(address % 2)
 			return m_mem[address].odd_frame.cmd;
@@ -49,20 +50,24 @@ command Memory::getCommand(int address) const
 			return m_mem[address].even_frame.cmd;
 			
 	}
-	throw 0;
-
+    throw std::out_of_range("Wrong command address");
 }
 
 
-void Memory::loadFile(char* filename)
+void Memory::loadFile(const std::string _filename)
 {
-	FILE *f = fopen( filename, "r" );
-	if(f)
+    FILE *f = fopen(_filename.c_str(), "rb");
+	if(f != NULL)
 	{
 		while(!feof(f))
 		{
-				fread(m_mem, sizeof(frame), m_size, f);
+				fread(m_mem, sizeof(frame), MEMORY_SIZE, f);
 		}
 		fclose( f );
 	}
+    else
+    {
+        std::cerr << "Unable to open file `" << _filename << "\'." << std::endl;
+        return;
+    }
 }

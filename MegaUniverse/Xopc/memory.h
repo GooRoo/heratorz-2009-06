@@ -1,6 +1,10 @@
 #ifndef _MEMORY_H_
 #define _MEMORY_H_
 
+#include <string>
+
+typedef unsigned short addr;
+
 union command {
 	struct {
 		unsigned int r2 : 14;
@@ -15,7 +19,6 @@ union command {
 		unsigned int op : 4;
 		unsigned int flag : 4;
 	} s_command;
-
 };
 
 union frame 
@@ -36,24 +39,21 @@ union frame
 class Memory
 {
 public:
-	Memory(int size);
+	Memory();
 	~Memory();
 
-	void loadFile(char* filename);
+    void loadFile(const std::string filename);
 
     // Access methods
-	double getData(int address) const;
-	bool setData(int address, double data);
+	double getData(addr address) const;
+	bool setData(addr address, double data);
 
-    command getCommand(int address) const;
+    command getCommand(addr address) const;
 	
-	int getSize() const {return m_size; };
-protected:
-
 private:
-    frame* m_mem;
-	int m_size;
+    static const size_t MEMORY_SIZE = 16384;
 
+    frame* m_mem;
 };
 
 #endif // _MEMORY_H_
