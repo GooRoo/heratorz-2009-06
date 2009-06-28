@@ -47,12 +47,14 @@ OrbitGui::~OrbitGui()
 
 void OrbitGui::update()
 {
-    mX = mVM->readPort(0x2) / 10e+4;
-    mX = mVM->readPort(0x3) / 10e+4;
-    mTargetRad = mVM->readPort(0x4) / 10e+4;
+	const double m = 2*10e+4;
+
+    mX = mVM->readPort(0x2) / m;
+    mY = mVM->readPort(0x3) / m;
+    mTargetRad = mVM->readPort(0x4) / m;
 
     if (!mSceneItems[TARGET_RAD])
-        mSceneItems[TARGET_RAD] = mScene->addEllipse(-mTargetRad / 2, -mTargetRad / 2, mTargetRad, mTargetRad, QPen(Qt::red), QBrush(Qt::NoBrush));
+        mSceneItems[TARGET_RAD] = mScene->addEllipse(-mTargetRad, -mTargetRad , mTargetRad*2, mTargetRad*2, QPen(Qt::red), QBrush(Qt::NoBrush));
 
     mSceneItems[SHIP]->setPos(mX, mY);
     mScene->invalidate();
