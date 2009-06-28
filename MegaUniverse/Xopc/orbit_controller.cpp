@@ -7,16 +7,16 @@ void OrbitController::OnActuatorsWork()
 
 	if(f)
 	{
-		m_vm->writePort(0x2, 50);
-		m_vm->writePort(0x3, -50);
+		mVM->writePort(0x2, 50);
+		mVM->writePort(0x3, -50);
 	}
 	else
 	{
-		m_vm->writePort(0x2, 0);
-		m_vm->writePort(0x3, 0);
+		mVM->writePort(0x2, 0);
+		mVM->writePort(0x3, 0);
 	}
-	m_vm->writePort(0x3E80, 1001);
-	f=false;
+	mVM->writePort(0x3E80, 1001);
+	f = false;
 }
 
 void OrbitController::OnSensorsWork()
