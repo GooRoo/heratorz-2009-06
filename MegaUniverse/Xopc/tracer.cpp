@@ -1,38 +1,95 @@
 #include "tracer.h"
 
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
-Tracer::Tracer()
+BinTracer::BinTracer()
+    : bin(std::clog)
+{
+    bin << "Addr.\tCommand" << std::endl;
+}
+
+BinTracer & BinTracer::inst()
+{
+    static BinTracer tr;
+    return tr;
+}
+
+void BinTracer::trace(addr _address, std::string _comm, double _data)
+{
+    bin << _address << "\t" << _comm << "\t" << _data << std::endl;
+}
+
+void BinTracer::trace(addr _address, std::string _comm)
+{
+    bin << _address << "\t" << _comm << std::endl;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+ControlTracer::ControlTracer(size_t _scenarioID)
+    : mHeader(_scenarioID), mInitialized(true)
 {
     init();
 }
 
-Tracer::~Tracer()
+ControlTracer::~ControlTracer()
 {
-
+    if (!mErrorFlag)
+    {
+        (static_cast<std::ofstream *>(os))->close();
+    }
 }
 
-void Tracer::init()
+ControlTracer & ControlTracer::inst(size_t _scenarioID)
 {
-    // пока что юзаю стандартные потоки, но потом надо заменить на файлы
-    bin = &std::cout;
-    control = &std::cout;
-
-    (*bin) << "Addr.\tCommand" << std::endl;
+    static ControlTracer ct(_scenarioID);
+    if (_scenarioID != ct.mHeader.scenarioID)
+    {
+        ct.setScenarioID(_scenarioID);
+    }
+    return ct;
 }
 
-Tracer & Tracer::inst()
+void ControlTracer::init()
 {
-    static Tracer tr;
-    return tr;
+    mErrorFlag = false;
+    std::stringstream filename;
+    filename << "trace" << mHeader.scenarioID << ".osf";
+
+    os = new std::ofstream(filename.str().c_str(), std::ios::out | std::ios::binary);
+
+    if (!os->good())
+    {
+        std::cerr << "Unable to open file for writing.";
+        mErrorFlag = true;
+        os = &std::clog;
+    }
+
+    std::ostream & ros = *os;
+    
+    ros << mHeader << std::flush;
 }
 
-void Tracer::traceBin(addr _address, std::string _comm, double _data)
+void ControlTracer::setScenarioID(size_t _newID)
 {
-    (*bin) << _address << "\t" << _comm << "\t" << _data << std::endl;
+    mHeader.scenarioID = _newID;
+
+    if (!mErrorFlag)
+    {
+        (static_cast<std::ofstream *>(os))->close();
+    }
+
+    init();
 }
 
-void Tracer::traceBin(addr _address, std::string _comm)
+std::ostream & operator<<(std::ostream & _os, const ControlTracer::Header & _header)
 {
-    (*bin) << _address << "\t" << _comm << std::endl;
+    _os.write(reinterpret_cast<const char*>(&_header.magicNumber), 4);
+    _os.write(reinterpret_cast<const char*>(&_header.teamID), 4);
+    _os.write(reinterpret_cast<const char*>(&_header.scenarioID), 4);
+    return _os;
 }
