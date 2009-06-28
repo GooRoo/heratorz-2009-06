@@ -9,6 +9,10 @@ enum SceneObjects
     EARTH,
     TARGET_RAD,
     SHIP,
+	SHIP_X_TXT,
+	SHIP_Y_TXT,
+	SHIP_ORBIT_RAD_TXT,
+	TARGET_RAD_TXT,
     LAST
 };
 
@@ -57,6 +61,19 @@ void OrbitGui::update()
         mSceneItems[TARGET_RAD] = mScene->addEllipse(-mTargetRad, -mTargetRad , mTargetRad*2, mTargetRad*2, QPen(Qt::red), QBrush(Qt::NoBrush));
 
     mSceneItems[SHIP]->setPos(mX, mY);
+	
+	QString sx,sy, strad, sourrad;
+
+	sx = mX;
+	sy = mY;
+	strad = mTargetRad;
+	sourrad = sqrt(mX*mX + mY*mY);
+
+	QFont font("Arial",22,400);
+
+	mSceneItems[SHIP_X_TXT] = mScene->addSimpleText(sx);
+	mSceneItems[SHIP_X_TXT]->setPos(20,20);
+	mSceneItems[SHIP_X_TXT]->setVisible(true);
     mScene->invalidate();
 }
 
