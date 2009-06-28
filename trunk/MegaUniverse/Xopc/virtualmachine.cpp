@@ -414,6 +414,6 @@ void VirtualMachine::Binary::executeCommand(addr _address)
         addr r1 = mCommands[_address].second.Double.r1,
             r2 = mCommands[_address].second.Double.r2;
 
-        (mVM->*dFuncs[code - 1])(r1, r2);
+        (mVM->*dFuncs[code - ADD])(r1, r2);
     }
 }
