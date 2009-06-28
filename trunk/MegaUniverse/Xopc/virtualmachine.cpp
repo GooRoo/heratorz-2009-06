@@ -376,7 +376,7 @@ void VirtualMachine::Binary::parseCommand(addr _address, command _comm)
 
     }
 
-    Tracer::inst().traceBin(_address, debugStr.str());
+    BinTracer::inst().trace(_address, debugStr.str());
 }
 
 void VirtualMachine::Binary::executeCommand(addr _address)

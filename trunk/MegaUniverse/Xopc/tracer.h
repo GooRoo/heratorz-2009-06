@@ -6,26 +6,55 @@
 
 #include "memory.h"
 
-class Tracer
+class BinTracer
 {
 public:
-    ~Tracer();
+    static BinTracer & inst();
 
-    static Tracer & inst();
+    void trace(addr _address, std::string _comm, double _data);
+    void trace(addr _address, std::string _comm);
 
-    void traceBin(addr _address, std::string _comm, double _data);
-    void traceBin(addr _address, std::string _comm);
-    void traceControl();
-	
 private:
-    Tracer();
-    Tracer(const Tracer &);
-    Tracer & operator=(const Tracer &);
+    BinTracer();
+    BinTracer(const BinTracer &);
+    BinTracer & operator=(const BinTracer &);
+
+    std::ostream & bin;
+};
+
+
+class ControlTracer
+{
+public:
+    ~ControlTracer();
+
+    static ControlTracer & inst(size_t _scenarioID);
+    
+    void setScenarioID(size_t _newID);
+
+    void trace() {}
+
+    struct Header {
+        static const size_t magicNumber = 0xCAFEBABE;
+        static const size_t teamID = 263;
+        size_t scenarioID;
+
+        Header(size_t _scenarioID) : scenarioID(_scenarioID) {}
+        friend std::ostream & operator<<(std::ostream &, const Header &);
+    };
+
+private:
+    ControlTracer(size_t _scenarioID);
+    ControlTracer(const ControlTracer &);
+    ControlTracer & operator=(const ControlTracer &);
 
     void init();
 
-    std::ostream * bin, * control;
-};
+    Header mHeader;
 
+    std::ostream * os;
+    bool mErrorFlag;
+    bool mInitialized;
+};
 
 #endif // _TRACER_H_
