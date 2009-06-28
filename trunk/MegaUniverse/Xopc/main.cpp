@@ -1,17 +1,27 @@
 #include <cstdlib>
+#include <iostream>
+#include <stdexcept>
 #include "virtualmachine.h"
 #include "orbit_controller.h"
 
 int main(int _argc, char * _argv[])
 {
-	VirtualMachine vm;
-	vm.loadBinary("bin1.obf");
+    try 
+    {
+	    VirtualMachine vm;
+		vm.loadBinary("bin1.obf");
+	
+		OrbitController controller;
+		vm.connect(&controller);
+	
+		vm.run();
+    }
+    catch (const std::exception & ex)
+    {
+        std::cerr << ex.what() << std::endl;
+        return EXIT_FAILURE;
+    }
 
-	OrbitController controller;
-	vm.connect(&controller);
-
-	vm.run();
-
-    return 0;
+    return EXIT_SUCCESS;
 }
 

@@ -1,11 +1,10 @@
 #ifndef _VIRTUALMACHINE_H_
 #define _VIRTUALMACHINE_H_
 
-#include <vector>
+#include <map>
 #include <string>
+#include <vector>
 #include "memory.h"
-
-typedef std::vector<double> PortsList;
 
 class AbstractController;
 
@@ -28,41 +27,74 @@ public:
 
     // Access methods
     bool getStatus() const;
+
+    class Binary
+    {
+    private:
+        // service declarations
+        enum D_Instructions
+        {
+            ADD = 0x1,
+            SUB,
+            MULT,
+            DIV,
+            OUTPUT,
+            PHI
+        };
+
+        enum S_Instructions
+        {
+            NOOP = 0x0,
+            CMPZ,
+            SQRT,
+            COPY,
+            INPUT
+        };
+
+        enum ImmMode
+        {
+            LTZ = 0x0,      // less than 0
+            LEZ,            // less or equal to 0
+            EQZ,            // equal to 0
+            GEZ,            // greater or equal to 0
+            GTZ             // greater than 0
+        };
+
+    public:
+    	Binary(VirtualMachine * _vm, size_t _size);
+    	~Binary();
+
+        void parseCommand(addr _address, command _comm);
+        void executeCommand(addr _address);
+    	
+        typedef union {
+            struct {
+                D_Instructions code;
+                addr r1, r2;
+            } Double;
+
+            struct {
+                S_Instructions code;
+                ImmMode imm;
+                addr r;
+            } Single;
+        } BinCommand;
+        typedef std::map<addr, std::pair<bool, BinCommand> > BinaryCommands;
+
+        friend class VirtualMachine;
+
+    private:
+        VirtualMachine * mVM;
+        size_t mSize;
+        BinaryCommands mCommands;
+    };
+
+    typedef std::vector<double> PortsList;
 	
 private:
-    // service declarations
-    enum D_Instructions
-    {
-        ADD = 0x1,
-        SUB,
-        MULT,
-        DIV,
-        OUTPUT,
-        PHI
-    };
-
-    enum S_Instructions
-    {
-        NOOP = 0x0,
-        CMPZ,
-        SQRT,
-        COPY,
-        INPUT
-    };
-
-    enum ImmMode
-    {
-        LTZ = 0x0,      // less than 0
-        LEZ,            // less or equal to 0
-        EQZ,            // equal to 0
-        GEZ,            // greater or equal to 0
-        GTZ             // greater than 0
-    };
-
     // service methods
     void checkInputPorts();
     void updateSensors();
-    void executeCommand(addr _address);
 
     // commands
     void onAdd(addr _r1, addr _r2);
@@ -71,11 +103,11 @@ private:
     void onDiv(addr _r1, addr _r2);
     void onOutput(addr _r1, addr _r2);
     void onPhi(addr _r1, addr _r2);
-    void onCmpz(ImmMode _mode, addr _r);
+    void onCmpz(Binary::ImmMode _mode, addr _r);
     void onSqrt(addr _r);
     void onCopy(addr _r);
     void onInput(addr _r);
-    void onNoop();
+    void onNoop(addr);
 
     // links
     AbstractController * mController;
@@ -84,11 +116,13 @@ private:
     Memory * mMemory;
     PortsList * mInput;
     PortsList * mOutput;
-    unsigned short mCommandCounter;
-	size_t mBinaryEdge;
-	unsigned int mTickCounter;
     bool mStatus;
-	static const size_t PORT_MEMORY_SIZE = 16384;
+
+    unsigned short mCommandCounter;
+    unsigned int mTickCounter;
+
+    size_t mBinaryEdge;
+    Binary * mBinary;
 };
 
 
