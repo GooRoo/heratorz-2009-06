@@ -7,7 +7,7 @@ public:
 	PhysxModel();
 	~PhysxModel();
 
-	
+	const double EARTH_RADIUS;
 private:
 };
 

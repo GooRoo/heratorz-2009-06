@@ -4,13 +4,17 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <QtCore/QThread>
 #include "memory.h"
 
 class AbstractController;
-
+class AbstractGui;
 
 class VirtualMachine
+    : public QThread
 {
+    Q_OBJECT
+
 public:
     // constructors & destructor
 	VirtualMachine();
@@ -19,7 +23,7 @@ public:
     // service methods
     void loadBinary(const std::string _filename);
     void connect(AbstractController * _controller);
-    void run();
+    void setGui(AbstractGui * _gui);
 
     // I/O methods
     double readPort(size_t _num) const;
@@ -90,7 +94,10 @@ public:
     };
 
     typedef std::vector<double> PortsList;
-	
+
+protected:
+    void run();
+
 private:
     // service methods
     void checkInputPorts();
@@ -111,6 +118,7 @@ private:
 
     // links
     AbstractController * mController;
+    AbstractGui * mGui;
 
     // data
     Memory * mMemory;

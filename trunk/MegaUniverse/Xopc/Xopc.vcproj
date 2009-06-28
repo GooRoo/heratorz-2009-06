@@ -41,7 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="GeneratedFiles\"
+				PreprocessorDefinitions="WIN32;_DEBUG;QT_THREAD_SUPPORT,QT_CORE_LIB,QT_GUI_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -232,6 +233,27 @@
 			<File
 				RelativePath=".\orbit_gui.h"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="moc"
+						CommandLine="moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -I&quot;..\..\..\include\QtCore&quot; -I&quot;..\..\..\include\QtGui&quot; -I&quot;..\..\..\include&quot; -I&quot;..\..\..\include\ActiveQt&quot; -I&quot;tmp\moc\debug_shared&quot; -I&quot;.&quot; -I..\..\..\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 orbit_gui.h -o GeneratedFiles\moc_orbit_gui.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="%QTDIR%\bin\moc.exe;orbit_gui.h"
+						Outputs="GeneratedFiles\moc_orbit_qui.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -I&quot;..\..\..\include\QtCore&quot; -I&quot;..\..\..\include\QtGui&quot; -I&quot;..\..\..\include&quot; -I&quot;..\..\..\include\ActiveQt&quot; -I&quot;tmp\moc\debug_shared&quot; -I&quot;.&quot; -I..\..\..\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 orbit_gui.h -o GeneratedFiles\moc_orbit_gui.cpp"
+						AdditionalDependencies="%QTDIR%\bin\moc.exe;orbit_gui.h"
+						Outputs="GeneratedFiles\moc_orbit_qui.cpp"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\tracer.h"
@@ -240,13 +262,119 @@
 			<File
 				RelativePath=".\virtualmachine.h"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="moc"
+						CommandLine="moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -I&quot;..\..\..\include\QtCore&quot; -I&quot;..\..\..\include\QtGui&quot; -I&quot;..\..\..\include&quot; -I&quot;..\..\..\include\ActiveQt&quot; -I&quot;GeneratedFiles&quot; -I&quot;.&quot; -I..\..\..\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 virtualmachine.h -o GeneratedFiles\moc_virtualmachine.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="%QTDIR%\bin\moc.exe;virtualmachine.h"
+						Outputs="GeneratedFiles\moc_virtualmachine.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -I&quot;..\..\..\include\QtCore&quot; -I&quot;..\..\..\include\QtGui&quot; -I&quot;..\..\..\include&quot; -I&quot;..\..\..\include\ActiveQt&quot; -I&quot;GeneratedFiles&quot; -I&quot;.&quot; -I..\..\..\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 virtualmachine.h -o GeneratedFiles\moc_virtualmachine.cpp"
+						AdditionalDependencies="%QTDIR%\bin\moc.exe;virtualmachine.h"
+						Outputs="GeneratedFiles\moc_virtualmachine.cpp"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Filter="qrc;*"
+			UniqueIdentifier="{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}"
+			ParseFiles="false"
 			>
+			<File
+				RelativePath=".\Resources\earth.png"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\gui.qrc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing gui.qrc..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;gui&quot; -no-compress &quot;.\gui.qrc&quot; -o .\GeneratedFiles\qrc_gui.cpp&#x0D;&#x0A;"
+						AdditionalDependencies=".\gui.qrc;.\Resources\earth.png;.\Resources\ship.png"
+						Outputs=".\GeneratedFiles\qrc_gui.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Rcc&apos;ing gui.qrc..."
+						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;gui&quot; -no-compress &quot;.\gui.qrc&quot; -o .\GeneratedFiles\qrc_gui.cpp&#x0D;&#x0A;"
+						AdditionalDependencies=".\gui.qrc;.\Resources\earth.png;.\Resources\ship.png"
+						Outputs=".\GeneratedFiles\qrc_gui.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Resources\ship.png"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="Generated Files"
+			Filter="moc;h;cpp"
+			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}"
+			>
+			<File
+				RelativePath=".\GeneratedFiles\moc_orbit_gui.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\moc_virtualmachine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\qrc_gui.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

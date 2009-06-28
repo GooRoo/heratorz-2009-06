@@ -9,12 +9,13 @@ public:
 
 	virtual ~AbstractController() {};
 
-	virtual void setVirtualMachine(VirtualMachine * vm) { m_vm = vm; };
+	virtual void connect(VirtualMachine * vm) { mVM = vm; };
 
     virtual void OnActuatorsWork() = 0;
     virtual void OnSensorsWork() = 0;
 
-	VirtualMachine * m_vm;
+protected:
+	VirtualMachine * mVM;
 };
 
 #endif // _CONTROLLER_H_

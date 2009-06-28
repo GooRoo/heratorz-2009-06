@@ -10,11 +10,10 @@ public:
 
 	virtual void update() = 0;
 
-	virtual void setVirtualMachine(VirtualMachine * vm) { m_vm = vm; };
+	virtual void connect(VirtualMachine * _vm) { mVM = _vm; };
 
-private:
-	VirtualMachine * m_vm;
-
+protected:
+	VirtualMachine * mVM;
 };
 
 

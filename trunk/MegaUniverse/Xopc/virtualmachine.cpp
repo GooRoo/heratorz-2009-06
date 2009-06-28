@@ -1,5 +1,6 @@
 #include "virtualmachine.h"
 #include "controller.h"
+#include "abstract_gui.h"
 #include "tracer.h"
 
 #include <cmath>
@@ -16,6 +17,7 @@ VirtualMachine::VirtualMachine()
 	  mTickCounter(0),
       mOutput(NULL),
       mController(NULL),
+      mGui(NULL),
       mBinary(NULL)
 {
     mInput = new PortsList(3);
@@ -92,7 +94,14 @@ void VirtualMachine::loadBinary(const std::string _filename)
 void VirtualMachine::connect(AbstractController *_controller)
 {
     mController = _controller;
-	mController->setVirtualMachine(this);
+	mController->connect(this);
+}
+
+
+void VirtualMachine::setGui(AbstractGui * _gui)
+{
+    mGui = _gui;
+    mGui->connect(this);
 }
 
 
@@ -103,12 +112,13 @@ void VirtualMachine::run()
 
     do 
     {
+        std::clog << "Tick: " << mTickCounter << std::endl;
 		checkInputPorts();
 
 		do 
 		{
+			mBinary->executeCommand(mCommandCounter);
             mCommandCounter++;
-			mBinary->executeCommand(mCommandCounter - 1);
 		} while (mCommandCounter < mBinaryEdge);
 
 		updateSensors();
@@ -116,7 +126,7 @@ void VirtualMachine::run()
 		mCommandCounter = 0;
 		mTickCounter++;
 
-    } while (mTickCounter < 20);
+    } while (mTickCounter < 3000);
 
     mTickCounter = 0;
 }
@@ -142,6 +152,9 @@ void VirtualMachine::updateSensors()
     // notify controller about it
 	if (mController)
 		mController->OnSensorsWork();
+
+    if (mGui && mTickCounter % 50 == 0)
+        mGui->update();
 }
 
 void VirtualMachine::onAdd(addr _r1, addr _r2)
