@@ -18,7 +18,7 @@ void Tracer::init()
     bin = &std::cout;
     control = &std::cout;
 
-    (*bin) << "Addr.\tCommand\t\tData" << std::endl;
+    (*bin) << "Addr.\tCommand" << std::endl;
 }
 
 Tracer & Tracer::inst()
@@ -30,4 +30,9 @@ Tracer & Tracer::inst()
 void Tracer::traceBin(addr _address, std::string _comm, double _data)
 {
     (*bin) << _address << "\t" << _comm << "\t" << _data << std::endl;
+}
+
+void Tracer::traceBin(addr _address, std::string _comm)
+{
+    (*bin) << _address << "\t" << _comm << std::endl;
 }

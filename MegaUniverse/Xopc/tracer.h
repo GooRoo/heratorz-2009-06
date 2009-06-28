@@ -14,6 +14,7 @@ public:
     static Tracer & inst();
 
     void traceBin(addr _address, std::string _comm, double _data);
+    void traceBin(addr _address, std::string _comm);
     void traceControl();
 	
 private:
