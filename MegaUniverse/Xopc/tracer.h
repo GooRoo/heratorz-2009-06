@@ -37,6 +37,7 @@ public:
     void setScenarioID(size_t _newID);
 
     void trace(unsigned short _tick, const PortMap & _ports);
+    void traceLast(unsigned short _tick);
 
     struct Header {
         static const size_t magicNumber = 0xCAFEBABE;

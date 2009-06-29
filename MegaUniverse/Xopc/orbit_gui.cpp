@@ -22,7 +22,7 @@ OrbitGui::OrbitGui()
     std::fill(mSceneItems, mSceneItems + LAST, reinterpret_cast<QGraphicsItem*>(NULL));
     
     QPen pen(Qt::DashLine); pen.setColor(Qt::yellow);
-    //mScene->setBackgroundBrush(QBrush(Qt::black));
+    mScene->setBackgroundBrush(QBrush(Qt::black));
     mScene->addLine(0, -300, 0, 300, pen);
     mScene->addLine(-300, 0, 300, 0, pen);
     
@@ -35,8 +35,7 @@ OrbitGui::OrbitGui()
     mScene->addItem(mSceneItems[SHIP]);
     mSceneItems[SHIP]->setZValue(2);
 
-    mSceneItems[TEXT] = mScene->addText("N/A");
-    mSceneItems[TEXT]->setPos(20 - 300, 20 - 300);
+    mSceneItems[TEXT] = NULL;
 
     mView = new QGraphicsView(mScene);
     mView->resize(620, 620);
@@ -56,26 +55,39 @@ void OrbitGui::update()
 
     mScore = mVM->readPort(0x0);
     mFuel = mVM->readPort(0x1);
-    mX = mVM->readPort(0x2) / m;
-    mY = mVM->readPort(0x3) / m;
-    mTargetRad = mVM->readPort(0x4) / m;
+    mX = mVM->readPort(0x2);
+    mY = mVM->readPort(0x3);
+    mTargetRad = mVM->readPort(0x4);
 
     if (!mSceneItems[TARGET_RAD])
-        mSceneItems[TARGET_RAD] = mScene->addEllipse(-mTargetRad, -mTargetRad , mTargetRad*2, mTargetRad*2, QPen(Qt::red), QBrush(Qt::NoBrush));
+        mSceneItems[TARGET_RAD] = mScene->addEllipse(
+                -mTargetRad / m,
+                -mTargetRad / m,
+                mTargetRad * 2 / m,
+                mTargetRad * 2 / m,
+                QPen(Qt::red),
+                QBrush(Qt::NoBrush)
+            );
 
-    mSceneItems[SHIP]->setPos(mX, mY);
+    mSceneItems[SHIP]->setPos(mX / m, mY / m);
 	
+
+    static QGraphicsTextItem * text = new QGraphicsTextItem("");
+    if (mSceneItems[TEXT] != NULL)
+    {
+        mScene->removeItem(mSceneItems[TEXT]);
+    }
     std::stringstream outText;
-    outText << "Coords: (" << mX << ", " << mY << ")\n" <<
-        "Fuel: " << mFuel <<
-        "\nCur.radius: " << sqrt(mX*mX + mY*mY) <<
-        "\nTarget rad.: " << mTargetRad <<
-        "\nScore: " << mScore;
-
-    mScene->removeItem(mSceneItems[TEXT]);
-    (mSceneItems[TEXT] = mScene->addText(outText.str().c_str(), QFont("Arial", 15)))->setPos(20 - 300, 20 - 300);
+    outText << "<font color=\"yellow\"><strong>Coords:</strong> (" << mX << ", " << mY << ")<br/>\n" <<
+        "<strong>Fuel:</strong> " << mFuel <<
+        "<br/>\n<strong>Cur.radius:</strong> " << sqrt(mX * mX + mY * mY) <<
+        "<br/>\n<strong>Target rad.:</strong> " << mTargetRad <<
+        "<br/>\n<strong>Score:</strong> " << mScore << "</font>";
+    text->setHtml(outText.str().c_str());
+    mSceneItems[TEXT] = text;
+    mScene->addItem(mSceneItems[TEXT]);
+    text->setPos(20 - 300, 20 - 300);
     
-
     mScene->invalidate();
 }
 

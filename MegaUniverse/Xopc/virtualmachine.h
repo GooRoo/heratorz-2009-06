@@ -24,6 +24,7 @@ public:
     void loadBinary(const std::string _filename);
     void connect(AbstractController * _controller);
     void setGui(AbstractGui * _gui);
+    void stop();
 
     // I/O methods
     double readPort(size_t _num) const;
@@ -132,6 +133,8 @@ private:
 
     size_t mBinaryEdge;
     Binary * mBinary;
+
+    bool mStopFlag;
 };
 
 

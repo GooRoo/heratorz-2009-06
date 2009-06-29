@@ -18,7 +18,8 @@ VirtualMachine::VirtualMachine()
       mOutput(NULL),
       mController(NULL),
       mGui(NULL),
-      mBinary(NULL)
+      mBinary(NULL),
+      mStopFlag(false)
 {
     mInput = new PortsList(3);
     mInputOld = new PortsList(3);
@@ -139,10 +140,16 @@ void VirtualMachine::run()
 	    mCommandCounter = 0;
 	    mTickCounter++;
 
-    } while (mTickCounter < 3000000);
-
-    mTickCounter = 0;
+    } while (mTickCounter < 3000000 && !mStopFlag);
 }
+
+
+void VirtualMachine::stop()
+{
+    mStopFlag = true;
+    ControlTracer::inst(1001).traceLast(mTickCounter);
+}
+
 
 void VirtualMachine::checkInputPorts()
 {
@@ -183,7 +190,7 @@ void VirtualMachine::updateSensors()
 	if (mController)
 		mController->OnSensorsWork();
 
-    if (mGui && mTickCounter % 20 == 0)
+    if (mGui && mTickCounter % 50 == 0)
         mGui->update();
 }
 
