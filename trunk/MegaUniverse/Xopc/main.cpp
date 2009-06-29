@@ -7,10 +7,12 @@
 
 int main(int _argc, char * _argv[])
 {
+    VirtualMachine vm;
+
+    int returnCode;
     QApplication app(_argc, _argv);
     try 
     {
-	    VirtualMachine vm;
         vm.loadBinary("bin1.obf");
 
 		OrbitController controller;
@@ -21,13 +23,17 @@ int main(int _argc, char * _argv[])
         gui.show();
 
         vm.start();
-        return app.exec();
+        returnCode = app.exec();
     }
     catch (const std::exception & ex)
     {
         std::cerr << ex.what() << std::endl;
+        vm.terminate();
         return EXIT_FAILURE;
     }
+
+    vm.terminate();
+    return returnCode;
 }
 
 

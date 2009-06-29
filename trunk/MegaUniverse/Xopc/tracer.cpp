@@ -102,6 +102,14 @@ void ControlTracer::trace(unsigned short _tick, const PortMap &_ports)
     (*os) << std::flush;
 }
 
+void ControlTracer::traceLast(unsigned short _tick)
+{
+    int size = 0;
+    os->write(reinterpret_cast<const char*>(&_tick), 4);
+    os->write(reinterpret_cast<const char*>(&size), 4);
+    (*os) << std::flush;
+}
+
 std::ostream & operator<<(std::ostream & _os, const ControlTracer::Header & _header)
 {
     _os.write(reinterpret_cast<const char*>(&_header.magicNumber), 4);
