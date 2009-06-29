@@ -123,6 +123,7 @@ private:
     // data
     Memory * mMemory;
     PortsList * mInput;
+    PortsList * mInputOld;
     PortsList * mOutput;
     bool mStatus;
 

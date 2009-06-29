@@ -3,6 +3,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <vector>
 
 #include "memory.h"
 
@@ -26,13 +27,16 @@ private:
 class ControlTracer
 {
 public:
+
+    typedef std::vector<std::pair<int, double> > PortMap;
+
     ~ControlTracer();
 
     static ControlTracer & inst(size_t _scenarioID);
     
     void setScenarioID(size_t _newID);
 
-    void trace() {}
+    void trace(unsigned short _tick, const PortMap & _ports);
 
     struct Header {
         static const size_t magicNumber = 0xCAFEBABE;

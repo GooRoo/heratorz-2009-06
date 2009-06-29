@@ -21,6 +21,7 @@ VirtualMachine::VirtualMachine()
       mBinary(NULL)
 {
     mInput = new PortsList(3);
+    mInputOld = new PortsList(3);
 	mMemory = new Memory();
 	mOutput = new PortsList(18);
 }
@@ -45,15 +46,27 @@ void VirtualMachine::writePort(size_t _num, double _val)
     switch (_num)
     {
         case 0x2:
-            (*mInput)[0] = _val;
+            if ((*mInput)[0] != _val)
+            {
+                (*mInputOld)[0] = (*mInput)[0];
+                (*mInput)[0] = _val;
+            }
             break;
 
         case 0x3:
-            (*mInput)[1] = _val;
+            if ((*mInput)[1] != _val)
+            {
+                (*mInputOld)[1] = (*mInput)[1];
+                (*mInput)[1] = _val;
+            }
             break;
 
         case 0x3e80:
-            (*mInput)[2] = _val;
+            if ((*mInput)[2] != _val)
+            {
+                (*mInputOld)[2] = (*mInput)[2];
+                (*mInput)[2] = _val;
+            }
             break;
 
         default:
@@ -107,26 +120,26 @@ void VirtualMachine::setGui(AbstractGui * _gui)
 
 void VirtualMachine::run()
 {
-	if (mMemory == NULL || mController == NULL)
+    if (mMemory == NULL || mController == NULL)
         return;
 
     do 
     {
-        std::clog << "Tick: " << mTickCounter << std::endl;
-		checkInputPorts();
+        //std::clog << "Tick: " << mTickCounter << std::endl;
+	    checkInputPorts();
 
-		do 
-		{
-			mBinary->executeCommand(mCommandCounter);
+	    do 
+	    {
+		    mBinary->executeCommand(mCommandCounter);
             mCommandCounter++;
-		} while (mCommandCounter < mBinaryEdge);
+	    } while (mCommandCounter < mBinaryEdge);
 
-		updateSensors();
+	    updateSensors();
 		
-		mCommandCounter = 0;
-		mTickCounter++;
+	    mCommandCounter = 0;
+	    mTickCounter++;
 
-    } while (mTickCounter < 3000);
+    } while (mTickCounter < 3000000);
 
     mTickCounter = 0;
 }
@@ -137,23 +150,40 @@ void VirtualMachine::checkInputPorts()
 	if (mController)
 		mController->OnActuatorsWork();
 
-    // ...
-    // check if some updates were done and update the model
-    // ...    
+    ControlTracer::PortMap ports;
+    for (size_t i = 0; i < mInput->size(); i++)
+    {
+        if ((*mInput)[i] != (*mInputOld)[i])
+        {
+            int address;
+            switch (i)
+            {
+                case 0:
+                    address = 0x2;
+                    break;
+                case 1:
+                    address = 0x3;
+                    break;
+                case 2:
+                    address = 0x3e80;
+                    break;
+                default:
+                    throw std::out_of_range("wrong port");
+            }
+            ports.push_back(std::make_pair(address, (*mInput)[i]));
+        }
+        ControlTracer::inst(1001).trace(mTickCounter, ports);
+    }
 }
 
 
 void VirtualMachine::updateSensors()
 {
-    // ...
-    // updating values on output
-    // ...
-
     // notify controller about it
 	if (mController)
 		mController->OnSensorsWork();
 
-    if (mGui && mTickCounter % 50 == 0)
+    if (mGui && mTickCounter % 20 == 0)
         mGui->update();
 }
 
