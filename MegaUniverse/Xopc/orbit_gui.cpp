@@ -145,13 +145,16 @@ OrbitShip::~OrbitShip()
 void OrbitShip::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->drawPixmap(
-            QPointF(-25, -25),
-            QPixmap(mPix->scaled(QSize(50, 50), Qt::KeepAspectRatio, Qt::SmoothTransformation))
+            QPointF(-20, -20),
+            QPixmap(mPix->scaled(QSize(40, 40), Qt::KeepAspectRatio, Qt::SmoothTransformation))
         );
+    painter->setBrush(Qt::green);
+    painter->setPen(Qt::NoPen);
+    painter->drawEllipse(QPointF(0, 0), 2, 2);
 }
 
 QRectF OrbitShip::boundingRect() const
 {
-    return QRectF(mPix->scaled(QSize(50, 50), Qt::KeepAspectRatio, Qt::SmoothTransformation).rect());
+    return QRectF(mPix->scaled(QSize(40, 40), Qt::KeepAspectRatio, Qt::SmoothTransformation).rect());
 }
 
