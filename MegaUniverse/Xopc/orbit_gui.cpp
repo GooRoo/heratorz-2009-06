@@ -3,16 +3,14 @@
 
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 
 enum SceneObjects
 {
     EARTH,
     TARGET_RAD,
     SHIP,
-	SHIP_X_TXT,
-	SHIP_Y_TXT,
-	SHIP_ORBIT_RAD_TXT,
-	TARGET_RAD_TXT,
+    TEXT,
     LAST
 };
 
@@ -24,7 +22,7 @@ OrbitGui::OrbitGui()
     std::fill(mSceneItems, mSceneItems + LAST, reinterpret_cast<QGraphicsItem*>(NULL));
     
     QPen pen(Qt::DashLine); pen.setColor(Qt::yellow);
-    mScene->setBackgroundBrush(QBrush(Qt::black));
+    //mScene->setBackgroundBrush(QBrush(Qt::black));
     mScene->addLine(0, -300, 0, 300, pen);
     mScene->addLine(-300, 0, 300, 0, pen);
     
@@ -36,6 +34,9 @@ OrbitGui::OrbitGui()
     mSceneItems[SHIP] = new OrbitShip;
     mScene->addItem(mSceneItems[SHIP]);
     mSceneItems[SHIP]->setZValue(2);
+
+    mSceneItems[TEXT] = mScene->addText("N/A");
+    mSceneItems[TEXT]->setPos(20 - 300, 20 - 300);
 
     mView = new QGraphicsView(mScene);
     mView->resize(620, 620);
@@ -51,8 +52,10 @@ OrbitGui::~OrbitGui()
 
 void OrbitGui::update()
 {
-	const double m = 2*10e+4;
+	const double m = 2e+5;
 
+    mScore = mVM->readPort(0x0);
+    mFuel = mVM->readPort(0x1);
     mX = mVM->readPort(0x2) / m;
     mY = mVM->readPort(0x3) / m;
     mTargetRad = mVM->readPort(0x4) / m;
@@ -62,18 +65,17 @@ void OrbitGui::update()
 
     mSceneItems[SHIP]->setPos(mX, mY);
 	
-	QString sx,sy, strad, sourrad;
+    std::stringstream outText;
+    outText << "Coords: (" << mX << ", " << mY << ")\n" <<
+        "Fuel: " << mFuel <<
+        "\nCur.radius: " << sqrt(mX*mX + mY*mY) <<
+        "\nTarget rad.: " << mTargetRad <<
+        "\nScore: " << mScore;
 
-	sx = mX;
-	sy = mY;
-	strad = mTargetRad;
-	sourrad = sqrt(mX*mX + mY*mY);
+    mScene->removeItem(mSceneItems[TEXT]);
+    (mSceneItems[TEXT] = mScene->addText(outText.str().c_str(), QFont("Arial", 15)))->setPos(20 - 300, 20 - 300);
+    
 
-	QFont font("Arial",22,400);
-
-	mSceneItems[SHIP_X_TXT] = mScene->addSimpleText(sx);
-	mSceneItems[SHIP_X_TXT]->setPos(20,20);
-	mSceneItems[SHIP_X_TXT]->setVisible(true);
     mScene->invalidate();
 }
 

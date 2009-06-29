@@ -86,6 +86,22 @@ void ControlTracer::setScenarioID(size_t _newID)
     init();
 }
 
+void ControlTracer::trace(unsigned short _tick, const PortMap &_ports)
+{
+    int size = static_cast<int>(_ports.size());
+    if (size)
+    {
+        os->write(reinterpret_cast<const char*>(&_tick), 4);
+        os->write(reinterpret_cast<const char*>(&size), 4);
+        for (int i = 0; i < size; i++)
+        {
+            os->write(reinterpret_cast<const char*>(&_ports[i].first), 4);
+            os->write(reinterpret_cast<const char*>(&_ports[i].second), 8);
+        }
+    }
+    (*os) << std::flush;
+}
+
 std::ostream & operator<<(std::ostream & _os, const ControlTracer::Header & _header)
 {
     _os.write(reinterpret_cast<const char*>(&_header.magicNumber), 4);
